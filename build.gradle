@@ -35,6 +35,16 @@ allprojects {
     sourceCompatibility = 1.8
     version = '1.0'
 
+    configurations.all {
+        resolutionStrategy {
+            // Pin Guava: mapdb 3.0.8 asks for [15.0,), which resolves to a version Gradle 6.7.1 cannot read
+            force 'com.google.guava:guava:28.2-jre'
+            force 'org.eclipse.collections:eclipse-collections-api:11.1.0'
+            force 'org.eclipse.collections:eclipse-collections:11.1.0'
+            force 'org.eclipse.collections:eclipse-collections-forkjoin:11.1.0'
+        }
+    }
+
     repositories {
         mavenCentral()
         jcenter()
