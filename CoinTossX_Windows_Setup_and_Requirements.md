@@ -2,6 +2,7 @@
 
 **Status:** working end to end on Windows (one client, one stock, simulator to web view). Items marked **[Unverified]** have not been tested.
 **Repository:** IvanJericevich/CoinTossX, branch `abm-experiment`, commit `08f4780` ("Prepare for asynchronous ABM (13)").
+**Our branch:** `windows-setup` on kbmeyer/CoinTossX (fork), commit `24ab49b` (setup changes and docs), then `222a3c8` (CLAUDE.md).
 **Run folder:** `C:\Projects\CoinTossX-run` (set in `windows.properties`).
 
 ---
@@ -50,7 +51,7 @@ git checkout abm-experiment
 git log -1 --oneline   # expect 08f4780
 ```
 
-**Line endings.** On this machine, 90 files showed as modified with identical content (CRLF vs LF only). Check with `git diff --ignore-cr-at-eol --stat`. Changes that matter are listed in Section 6.
+**Line endings.** On this machine, 90 files showed as modified with identical content (CRLF vs LF only). They were restored to the commit. Only the two edited files differ from `abm-experiment`, with LF endings kept. Check with `git diff --ignore-cr-at-eol --stat`. The changes that matter are listed in Section 6.
 
 ---
 
@@ -112,7 +113,7 @@ Expected: `build` ends with `BUILD SUCCESSFUL` (warnings are normal). `deployLoc
 | 2 | `build.gradle` (root, `allprojects`) | `resolutionStrategy` forcing `com.google.guava:guava:28.2-jre` | `mapdb 3.0.8` asks for Guava `[15.0,)`, which resolved to 33.8.0. Gradle 6.7.1 cannot choose a variant from it, so `:Common:compileJava` failed. |
 | 3 | `build.gradle` (same block) | Force `eclipse-collections`, `-api` and `-forkjoin` to `11.1.0` | The web app bundled 13.0.0, which is compiled for Java 17 (class version 61). Java 8 accepts up to 52, so `Web` failed at start-up in `OffHeapStorage`. The build passed because this only fails at run time. |
 
-These are the only code-level changes. They are fixes to the build, not to CoinTossX's behaviour. They should be committed on their own branch (see the notes in the change log).
+These are the only code-level changes. They are fixes to the build, not to CoinTossX's behaviour. They are committed on `windows-setup` in the fork, with LF line endings.
 
 **Why the pins are needed:** both dependencies were declared with open version ranges or left unpinned, so Maven delivered the newest release. The newest releases target newer Java or newer Gradle than this project uses.
 
@@ -245,8 +246,7 @@ Results are written **only** when the matching engine receives a `SimulationComp
 3. **No clean stop from outside the web app.** Writing a notebook that sends `SimulationComplete` would need Java interop. Planned for later.
 4. **Simulator end condition.** Not confirmed whether the simulator exits on its own after `HORIZON` events. **[Unverified]**.
 5. **`MEDIA_DRIVER_DIR` on Windows.** Works for this run, but the README and `deploy_local.gradle` (which deletes `/dev/shm/aeron`) assume Linux. **[Unverified]** beyond this run.
-6. **Working-copy line endings.** 90 repo files differ from the commit by line endings only. Resolve before committing.
-7. **Hardware.** The README's recommended specification was not checked on this machine.
+6. **Hardware.** The README's recommended specification was not checked on this machine.
 
 ---
 
